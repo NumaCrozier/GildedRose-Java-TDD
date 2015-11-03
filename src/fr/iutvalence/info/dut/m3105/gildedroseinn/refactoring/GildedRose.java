@@ -7,7 +7,7 @@ public class GildedRose
 
 	/*
 	 * The code below is intended to help writing test fixtures
-	 * 
+	 *
 	 * items = new ArrayList<Item>(); 
 	 * items.add(new Item("+5 Dexterity Vest", 10, 20)); 
 	 * items.add(new Item("Aged Brie", 2, 0)); 
@@ -17,6 +17,10 @@ public class GildedRose
 	 * items.add(new Item("Conjured Mana Cake", 3, 6));
 	 */
 
+	public void dayPassed() {
+		updateItems(items);
+	}
+	
 	public static void updateItems(List<Item> items)
 	{
 		for (int indexInItemList = 0; indexInItemList < items.size(); indexInItemList++)
@@ -25,6 +29,42 @@ public class GildedRose
 
 	public static void updateItem(Item item)
 	{	
+		switch(item.getName()) {
+		case "Aged Brie":
+			item.setQuality(item.getQuality() + 1);
+			item.setSellIn(item.getSellIn() - 1);
+			break;
+			
+		case "Sulfuras, Hand of Ragnaros": 
+			return;
+		
+		default:
+		updateSellIn(item);
+		updateQuality(item);
+		}
+		
+		fixQualityLimitsIssues(item);
 	}
-
+	
+	public static void updateSellIn(Item item)
+	{
+		item.setSellIn(item.getSellIn() - 1);
+	}
+	
+	public static void updateQuality(Item item)
+	{
+		if (item.getSellIn() < 0)
+			item.setQuality(item.getQuality() - 2);
+		else
+			item.setQuality(item.getQuality() - 1);
+	}
+	
+	public static void fixQualityLimitsIssues(Item item)
+	{
+		if (item.getQuality() < 0)
+			item.setQuality(0);
+		
+		else if (item.getQuality() > 50)
+			item.setQuality(50);
+	}
 }
